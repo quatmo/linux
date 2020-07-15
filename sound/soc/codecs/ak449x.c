@@ -10,8 +10,6 @@
  *  option) any later version.
  */
 
-#define DEBUG
-
 #include <linux/delay.h>
 #include <linux/gpio/consumer.h>
 #include <linux/i2c.h>
@@ -951,6 +949,7 @@ static int ak449x_init(struct snd_soc_codec *codec)
 	ak449x_power_on(ak449x);
 
 	snd_soc_read(codec, AK449X_00_CONTROL1); /* dummy read */
+	err = snd_soc_update_bits(codec, AK449X_00_CONTROL1, 0x80, 0x80);   /* ACKS bit = 1; 10000000 */
 	err = snd_soc_update_bits(codec, AK449X_00_CONTROL1, 0x80, 0x80);   /* ACKS bit = 1; 10000000 */
 
 	if (err < 0) {
