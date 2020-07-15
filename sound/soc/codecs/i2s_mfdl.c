@@ -147,15 +147,14 @@ static int snd_i2smfdl_set_daifmt(struct snd_pcm_substream *substream, unsigned 
 	struct snd_soc_card *card = rtd->card;
 	struct i2smfdl_priv *i2smfdl = snd_soc_card_get_drvdata(card);
 
-
-	if (!i2smfdl->intpll_fallback) {
-		dev_dbg(rtd->dev, "%s skip. internal pll fallback not allowed.", __FUNCTION__);
-		return 0;
-	}
-
 	dai->dai_fmt = (dai->dai_fmt & (~SND_SOC_DAIFMT_MASTER_MASK)) | dai_fmt;
 
 	if (dai->dai_fmt != dai_fmt_prev) {
+		if (!i2smfdl->intpll_fallback) {
+			dev_dbg(rtd->dev, "%s skip. internal pll fallback not allowed.", __FUNCTION__);
+			return 0;
+		}
+
 		snd_soc_dai_set_fmt(cpu_dai, dai->dai_fmt);
 		dev_dbg(rtd->dev, "%s daifmt change. %x to %x\n", __FUNCTION__, dai_fmt_prev, dai->dai_fmt);
 	}
