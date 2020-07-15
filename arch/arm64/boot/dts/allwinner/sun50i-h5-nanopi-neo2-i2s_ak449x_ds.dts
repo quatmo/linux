@@ -73,7 +73,7 @@
                 reg = <0x10>; /* I2C addr */
                 status = "okay";
 
-                chip = "AK4497"; /* AK4490/AK4495/AK4497/AK4493 */
+                chip = "AK4495"; /* AK4490/AK4495/AK4497/AK4493 */
                 chmode = "STEREO"; /* STEREO/STEREO_INVERT/MONO_LCH/MONO_RCH */
 /*                phase = "LNRN"; */ /* LNRN LNRI LIRN LIRI - N=non-invert I=invert*/
                 reset-gpios = <&pio 6 7 GPIO_ACTIVE_LOW>; /* PG7 */ /* pdn pin */

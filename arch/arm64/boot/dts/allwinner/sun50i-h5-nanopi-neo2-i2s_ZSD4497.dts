@@ -45,7 +45,23 @@
 
 / {
 	pcm5102a: pcm5102a-codec {
-                status = "disabled";
+		status = "disabled";
+	};
+
+	nullcodec: nullcodec {
+		#sound-dai-cells = <0>;
+		compatible = "nullcodec";
+		reset-gpios = <&pio 6 7 GPIO_ACTIVE_LOW>; /* PG7 */ /* pdn pin */
+		reset_holdtime = <1000>;
+		reset_postwait = <500>;
+	};
+
+	sound {
+		compatible = "i2smfdl,multi-function-dai-link";
+		i2s-controller = <&i2s0>;
+		i2s-codec = <&nullcodec &ak449x>;
+		daifmt_master_override = "CBS_CFS";
+		status = "okay";
 	};
 };
 
@@ -67,43 +83,43 @@
 &i2c0 {
 	status = "okay";
 
-        ak449x: ak449x-codec@10 {
-                #sound-dai-cells = <0>;
-                compatible = "asahi-kasei,ak449x";
-                reg = <0x10>; /* I2C addr */
-                status = "okay";
+	ak449x: ak449x-codec@10 {
+		#sound-dai-cells = <0>;
+		compatible = "asahi-kasei,ak449x";
+//		reg = <0x10>; /* I2C addr */
+		reg = <0x12>; /* I2C addr */
+		status = "okay";
 
-                chip = "AK4495"; /* AK4490/AK4495/AK4497/AK4493 */
-                chmode = "STEREO"; /* STEREO/STEREO_INVERT/MONO_LCH/MONO_RCH */
-/*                phase = "LNRN"; */ /* LNRN LNRI LIRN LIRI - N=non-invert I=invert*/
-                reset-gpios = <&pio 6 7 GPIO_ACTIVE_LOW>; /* PG7 */ /* pdn pin */
-                mute-gpios = <&pio 6 8 GPIO_ACTIVE_LOW>;  /* PG8 */ /* external mute */
-        };
+		chip = "AK4497"; /* AK4490/AK4495/AK4497/AK4493 */
+		chmode = "STEREO"; /* STEREO/STEREO_INVERT/MONO_LCH/MONO_RCH */
+/*		phase = "LNRN"; */ /* LNRN LNRI LIRN LIRI - N=non-invert I=invert*/
+/*		reset-gpios = <&pio 6 7 GPIO_ACTIVE_LOW>; *//* PG7 */ /* pdn pin */
+		mute-gpios = <&pio 6 8 GPIO_ACTIVE_LOW>; /* PG8 */ /* external mute */
+	};
 };
 
 &i2c1 {
-    /* no I2C1 for I2S0 */
-    status = "disabled";
+	/* no I2C1 for I2S0 */
+	status = "disabled";
 };
 
 &i2c2 {
-    status = "okay";
+	status = "okay";
 };
 
 &spi0 {
-    cs-gpios = <&pio 2 3 GPIO_ACTIVE_HIGH>;
-    pitft: pitft@0{
-	/* PG11 disable */
-        status = "disabled";
+	cs-gpios = <&pio 2 3 GPIO_ACTIVE_HIGH>;
+	pitft: pitft@0{
+		/* PG11 disable */
+		status = "disabled";
 	};
 
-    pitft_ts: pitft-ts@1 {
-        status = "disabled";
-    };
+	pitft_ts: pitft-ts@1 {
+		status = "disabled";
+	};
 };
 
 &i2s0 {
-	sound-dai = <&ak449x>; /* dai link target */
 	status = "okay";
 	clk_always_on = <1>;
 };
